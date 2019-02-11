@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 #include "Enemy.h"
 
@@ -34,7 +35,7 @@ int main()
     sf::Sprite play1(texSheet);
     play1.setOrigin(17.5, 17.5);
     play1.setTextureRect(sf::IntRect(0, 0, 35, 35));
-    play1.setPosition(390,550);
+    play1.setPosition(390,520);
 
 
 
@@ -54,12 +55,14 @@ int main()
 
     //SCORE SETTINGS
     unsigned int score = 0;
+    std::stringstream ss;
+    ss <<"SCORE: "<< score;
     sf::Font font;
     font.loadFromFile("ARCADE.TTF");
-    sf::Text scoreT("SCORE: ", font);
+    sf::Text scoreT(ss.str().c_str(), font);
     scoreT.setCharacterSize(25);
     scoreT.setOrigin(0, 25);
-    scoreT.setPosition(0, 600);
+    scoreT.setPosition(30, 570);
 
 	// GAME LOOP
     while (app.isOpen())
