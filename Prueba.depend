@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1549909497 source:/home/fv/Escritorio/Prueba/main.cpp
+	<SFML/Graphics.hpp>
+	<iostream>
+	<vector>
+	"Enemy.h"
+
+1549895910 source:/home/fv/Escritorio/Prueba/src/Enemy.cpp
+	"Enemy.h"
+
+1549896748 /home/fv/Escritorio/Prueba/include/Enemy.h
+	<SFML/Graphics.hpp>
+
