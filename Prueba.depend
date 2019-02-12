@@ -11,3 +11,16 @@
 1549896748 /home/fv/Escritorio/Prueba/include/Enemy.h
 	<SFML/Graphics.hpp>
 
+1549963032 source:/home/fv/Escritorio/BoomNSX/main.cpp
+	<SFML/Graphics.hpp>
+	<iostream>
+	<vector>
+	<sstream>
+	"Enemy.h"
+
+1549963261 /home/fv/Escritorio/BoomNSX/include/Enemy.h
+	<SFML/Graphics.hpp>
+
+1549963264 source:/home/fv/Escritorio/BoomNSX/src/Enemy.cpp
+	"Enemy.h"
+

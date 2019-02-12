@@ -39,19 +39,32 @@ int main()
 
 
 
-    //PRUEBA DE ENEMIGOS
+    //ENEMIES SETTINGS
     sf::Sprite ex(texSheet);
     ex.setTextureRect(sf::IntRect(35,0, 32, 32));
     ex.rotate(-90);
     ex.setScale(1.25, 1.5);
     ex.setOrigin(16, 16);
-    ex.setPosition(390,100);
 
+
+    std::vector<Enemy> enemies;
+    int posX  = 150, posY = 100;
+    for( int i = 0; i < 12; i++){
+        ex.setPosition(posX , posY);
+        Enemy aux(ex, 1, 0);
+        enemies.push_back(aux);
+        posX += 100;
+        if(posX >= 750){
+            posX = 150;
+            posY += 100;
+        }
+
+    }
+
+    //BULLETS
     sf::Sprite bullet(texSheet);
     bullet.setOrigin(10, 10);
     bullet.setTextureRect(sf::IntRect(35+(32*4), 0, 20, 20));
-    //ENEMIES SETTINGS
-    std::vector<Enemy> enemies;
 
     //SCORE SETTINGS
     unsigned int score = 0;
@@ -113,7 +126,8 @@ int main()
         app.draw(bgSprite);
         app.draw(play1);
         app.draw(bullet);
-        app.draw(ex);
+        for(int j = 0; j < enemies.size(); j++)
+            app.draw(enemies[j].getSprite());
         app.draw(scoreT);
 
         // Update the window

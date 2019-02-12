@@ -7,13 +7,13 @@
 class Enemy
 {
     public:
-        Enemy(){hp = 1; type = 0;sf::Vector2f pos(0,0);};
-        Enemy(sf::Vector2f, int, int);
+        Enemy(){hp = 1; type = 0;};
+        Enemy(sf::Sprite, int, int);
         void hit();
+        sf::Sprite getSprite();
         virtual ~Enemy();
     protected:
     private:
-        sf::Vector2f pos;
         sf::Sprite sprite;
         unsigned int hp;
         unsigned int type;

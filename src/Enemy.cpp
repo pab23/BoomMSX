@@ -1,7 +1,8 @@
 #include "Enemy.h"
 
 
-Enemy::Enemy(sf::Vector2f fPos, int fHp, int fType)
+
+Enemy::Enemy( sf::Sprite fSprite, int fHp, int fType)
 {
     if(fHp > 0)
         hp = fHp;
@@ -12,9 +13,14 @@ Enemy::Enemy(sf::Vector2f fPos, int fHp, int fType)
     else
         type = 0;
 
-    pos = fPos;
+    sprite = fSprite;
 }
+
 Enemy::~Enemy()
 {
     //dtor
+}
+
+sf::Sprite Enemy::getSprite(){
+    return sprite;
 }
