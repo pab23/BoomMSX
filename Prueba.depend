@@ -1,14 +1,15 @@
 # depslib dependency file v1.0
-1549921822 source:/home/fv/Escritorio/Prueba/main.cpp
+1549979541 source:/home/fv/Escritorio/Prueba/main.cpp
 	<SFML/Graphics.hpp>
 	<iostream>
 	<vector>
+	<sstream>
 	"Enemy.h"
 
-1549895910 source:/home/fv/Escritorio/Prueba/src/Enemy.cpp
+1549979292 source:/home/fv/Escritorio/Prueba/src/Enemy.cpp
 	"Enemy.h"
 
-1549896748 /home/fv/Escritorio/Prueba/include/Enemy.h
+1549979292 /home/fv/Escritorio/Prueba/include/Enemy.h
 	<SFML/Graphics.hpp>
 
 1549963032 source:/home/fv/Escritorio/BoomNSX/main.cpp

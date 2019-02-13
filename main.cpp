@@ -8,6 +8,7 @@
 #define width 800
 #define height 600
 #define vel 10
+#define bulletSpeed 0.25
 
 
 int main()
@@ -118,7 +119,7 @@ int main()
 
             }
         }
-
+        bullet.move(0, -bulletSpeed);
         // Clear screen
         app.clear();
 
