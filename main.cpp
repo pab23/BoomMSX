@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 
+#include "Game.h"
 #include "Enemy.h"
 #include "Bullet.h"
 
@@ -26,7 +27,15 @@ std::vector<Bullet> colision(const std::vector<Bullet> &fBullets)
 
 int main()
 {
+    ///////////////////////////////////////////////////
+    ///////////////////////WIP/////////////////////////
+    ///////////////////////////////////////////////////
+    Game *partida;
+    partida = new Game(width, height);
 
+    ///////////////////////////////////////////////////
+    ///////////////////////WIP/////////////////////////
+    ///////////////////////////////////////////////////
 
 
     //WINDOW SETTINGS
@@ -96,7 +105,6 @@ int main()
     while (app.isOpen())
     {
         // Process events
-        std::cout<<cont<<std::endl;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         {
             bullets.push_back(Bullet(texSheet, play1.getPosition().x, play1.getPosition().y-26));
@@ -121,7 +129,6 @@ int main()
                 play1.move(-vel, 0);
             }
         }
-        cont --;
         for(unsigned z = 0; z < bullets.size(); z++ )
         {
             bullets[z].move();
