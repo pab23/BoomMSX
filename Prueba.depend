@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1549979541 source:/home/fv/Escritorio/Prueba/main.cpp
+1550687259 source:/home/fv/Escritorio/Prueba/main.cpp
 	<SFML/Graphics.hpp>
 	<iostream>
 	<vector>
 	<sstream>
 	"Enemy.h"
+	"Bullet.h"
 
 1549979292 source:/home/fv/Escritorio/Prueba/src/Enemy.cpp
 	"Enemy.h"
@@ -24,4 +25,10 @@
 
 1549963264 source:/home/fv/Escritorio/BoomNSX/src/Enemy.cpp
 	"Enemy.h"
+
+1550684930 /home/fv/Escritorio/Prueba/include/Bullet.h
+	<SFML/Graphics.hpp>
+
+1550684958 source:/home/fv/Escritorio/Prueba/src/Bullet.cpp
+	"Bullet.h"
 

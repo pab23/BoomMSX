@@ -4,12 +4,25 @@
 #include <sstream>
 
 #include "Enemy.h"
+#include "Bullet.h"
 
 #define width 800
 #define height 600
-#define vel 10
-#define bulletSpeed 0.25
+#define vel 5
 
+std::vector<Bullet> colision(const std::vector<Bullet> &fBullets)
+{
+    std::vector<Bullet> devuelve = fBullets;
+    std::vector<Bullet>::iterator it;
+    for(it = devuelve.begin(); it != devuelve.end(); it++)
+    {
+        if(it->getPos().y < 0 || it->getPos().y > height)
+        {
+            devuelve.erase(it);
+        }
+    }
+    return devuelve;
+}
 
 int main()
 {
@@ -19,6 +32,7 @@ int main()
     //WINDOW SETTINGS
     sf::RenderWindow app(sf::VideoMode(width, height), "Boom MSX Remastered");
     app.setMouseCursorVisible(false);
+    app.setFramerateLimit(60);
 
 
     //BACKGROUND SETTINGS
@@ -63,9 +77,8 @@ int main()
     }
 
     //BULLETS
-    sf::Sprite bullet(texSheet);
-    bullet.setOrigin(10, 10);
-    bullet.setTextureRect(sf::IntRect(35+(32*4), 0, 20, 20));
+    std::vector<Bullet> bullets;
+
 
     //SCORE SETTINGS
     unsigned int score = 0;
@@ -78,56 +91,55 @@ int main()
     scoreT.setOrigin(0, 25);
     scoreT.setPosition(30, 570);
 
+
 	// GAME LOOP
     while (app.isOpen())
     {
         // Process events
-        sf::Event event;
-        while (app.pollEvent(event))
+        std::cout<<cont<<std::endl;
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         {
-            // Close window : exit
-            switch(event.type)
+            bullets.push_back(Bullet(texSheet, play1.getPosition().x, play1.getPosition().y-26));
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+        {
+            printf("Bullets created: %d", (int)bullets.size());
+            app.close();
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            if(play1.getPosition().x < width-20)
             {
-             case sf::Event::KeyPressed:
-                switch(event.key.code)
-                {
-                    case sf::Keyboard::Q:
-                        app.close();
-                        break;
-                    case sf::Keyboard::Right:
-                        if(play1.getPosition().x < width-20)
-                        {
-                            play1.move(vel, 0);
-                        }
-                        break;
-                    case sf::Keyboard::Left:
-                        if(play1.getPosition().x > 20)
-                        {
-                            play1.move(-vel, 0);
-                        }
-                        break;
-                    case sf::Keyboard::Space:
-                        bullet.setPosition(play1.getPosition().x, play1.getPosition().y-26);
-
-                    default:
-                    break;
-                }
-                break;
-
-            default:
-                break;
-
+                play1.move(vel, 0);
             }
         }
-        bullet.move(0, -bulletSpeed);
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            if(play1.getPosition().x > 20)
+            {
+                play1.move(-vel, 0);
+            }
+        }
+        cont --;
+        for(unsigned z = 0; z < bullets.size(); z++ )
+        {
+            bullets[z].move();
+        }
+        bullets = colision(bullets);
         // Clear screen
         app.clear();
 
         // Draw the sprite
         app.draw(bgSprite);
         app.draw(play1);
-        app.draw(bullet);
-        for(int j = 0; j < enemies.size(); j++)
+        for(unsigned z = 0; z < bullets.size(); z++)
+        {
+            app.draw(bullets[z].getSprite());
+        }
+
+
+        for(unsigned j = 0; j < enemies.size(); j++)
             app.draw(enemies[j].getSprite());
         app.draw(scoreT);
 
