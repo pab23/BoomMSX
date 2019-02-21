@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <vector>
+#include <sstream>
 
 #include "SFML/Graphics.hpp"
 
@@ -20,6 +21,8 @@ class Game
         void dibujar();
         void escucharTeclado();
         void procesarColisiones();
+        void creaEnemigos();
+        void creaMarcador();
 
     protected:
 
@@ -32,6 +35,11 @@ class Game
         vector<Enemy> enemies;
         Vector2i winDim;
         float vel;
+        unsigned int score = 0;
+        Font *font;
+        Text *scoreT;
+        Clock bullet_clock;
+        Time bullet_cooldown;
 
 
 };
