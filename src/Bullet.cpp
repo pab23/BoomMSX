@@ -15,11 +15,6 @@ Bullet::Bullet(sf::Texture &texture, float pos_x, float pos_y)
     sprite.setPosition(pos_x, pos_y);
 }
 
-Bullet::~Bullet()
-{
-    //dtor
-}
-
 void Bullet::move()
 {
     sprite.move(0, -bulletSpeed);
@@ -33,4 +28,9 @@ sf::Sprite Bullet::getSprite()
 sf::Vector2f Bullet::getPos()
 {
     return sprite.getPosition();
+}
+
+sf::FloatRect Bullet::getBounds()
+{
+    return sprite.getGlobalBounds();
 }

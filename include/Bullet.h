@@ -8,7 +8,7 @@ class Bullet
     public:
         Bullet();
         Bullet(sf::Texture&, float, float);
-        virtual ~Bullet();
+        sf::FloatRect getBounds();
 
         void move();
         sf::Sprite getSprite();

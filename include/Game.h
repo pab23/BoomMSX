@@ -1,17 +1,25 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <vector>
+
 #include "SFML/Graphics.hpp"
 
+#include "Bullet.h"
+#include "Enemy.h"
+
 using namespace sf;
+using namespace std;
 
 class Game
 {
     public:
-        Game(int, int);
+        Game(Vector2i, float);
 
         void gameLoop();
-        void draw();
+        void dibujar();
+        void escucharTeclado();
+        void procesarColisiones();
 
     protected:
 
@@ -19,7 +27,12 @@ class Game
 
         RenderWindow *window;
         Texture *sheet, *bg;
-        Sprite *bgSprite;
+        Sprite *bgSprite, *player;
+        vector<Bullet> bullets;
+        vector<Enemy> enemies;
+        Vector2i winDim;
+        float vel;
+
 
 };
 
