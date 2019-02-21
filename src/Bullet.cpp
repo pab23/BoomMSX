@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-#define bulletSpeed 1
+#define bulletSpeed 6
 
 Bullet::Bullet()
 {

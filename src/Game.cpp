@@ -62,14 +62,14 @@ void Game::dibujar()
 
 void Game::escucharTeclado()
 {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && bullet_cooldown.asSeconds() >= .5f)
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && bullet_cooldown.asSeconds() >= .4f)
     {
         bullet_clock.restart();
         bullets.push_back(Bullet(*sheet, player->getPosition().x, player->getPosition().y-26));
     }
     if(Keyboard::isKeyPressed(Keyboard::Q))
     {
-        printf("Bullets created: %d", (int)bullets.size());
+
         window->close();
     }
     if(Keyboard::isKeyPressed(Keyboard::Right))
@@ -94,7 +94,7 @@ void Game::escucharTeclado()
 
 void Game::procesarColisiones()
 {
-    FloatRect barrier({-30, 0}, {600, 1});
+    FloatRect barrier({-30, 0}, {winDim.x, 1});
 
 
     for(unsigned i = 0; i < bullets.size(); i++)
@@ -102,6 +102,21 @@ void Game::procesarColisiones()
         if(bullets[i].getBounds().intersects(barrier))
         {
             bullets.erase(bullets.begin()+i);
+        }
+        else
+        {
+            for( unsigned j = 0; j < enemies.size(); j++)
+            {
+                if(bullets[i].getBounds().intersects(enemies[j].getSprite().getGlobalBounds()))
+                {
+                    bullets.erase(bullets.begin()+i);
+                    enemies.erase(enemies.begin()+j);
+                    score++;
+                    stringstream ss;
+                    ss<<"SCORE: "<<score;
+                    scoreT->setString(ss.str().c_str());
+                }
+            }
         }
     }
 }
