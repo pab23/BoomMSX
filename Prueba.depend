@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1550707361 source:/home/fv/Escritorio/Prueba/main.cpp
+1550756200 source:/home/fv/Escritorio/Prueba/main.cpp
 	<SFML/Graphics.hpp>
 	<iostream>
 	<vector>
@@ -30,16 +30,17 @@
 1550707423 /home/fv/Escritorio/Prueba/include/Bullet.h
 	<SFML/Graphics.hpp>
 
-1550707408 source:/home/fv/Escritorio/Prueba/src/Bullet.cpp
+1550756200 source:/home/fv/Escritorio/Prueba/src/Bullet.cpp
 	"Bullet.h"
 
-1550707250 /home/fv/Escritorio/Prueba/include/Game.h
+1550756200 /home/fv/Escritorio/Prueba/include/Game.h
 	<vector>
+	<sstream>
 	"SFML/Graphics.hpp"
 	"Bullet.h"
 	"Enemy.h"
 
-1550707301 source:/home/fv/Escritorio/Prueba/src/Game.cpp
+1551012895 source:/home/fv/Escritorio/Prueba/src/Game.cpp
 	"Game.h"
 
 1550747061 source:/home/fv/BoomMSX/main.cpp

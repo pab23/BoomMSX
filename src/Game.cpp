@@ -39,6 +39,14 @@ void Game::gameLoop()
 {
     while(window->isOpen())
     {
+        Event event;
+        while( window->pollEvent(event))
+        {
+            if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::Q))
+            {
+                window->close();
+            }
+        }
         bullet_cooldown = bullet_clock.getElapsedTime();
         escucharTeclado();
         procesarColisiones();
@@ -62,24 +70,20 @@ void Game::dibujar()
 
 void Game::escucharTeclado()
 {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && bullet_cooldown.asSeconds() >= .4f)
+
+    if(Keyboard::isKeyPressed(Keyboard::Space) && bullet_cooldown.asSeconds() >= .4f)
     {
         bullet_clock.restart();
         bullets.push_back(Bullet(*sheet, player->getPosition().x, player->getPosition().y-26));
     }
-    if(Keyboard::isKeyPressed(Keyboard::Q))
-    {
-
-        window->close();
-    }
-    if(Keyboard::isKeyPressed(Keyboard::Right))
+    if(Keyboard::isKeyPressed(Keyboard::D))
     {
         if(player->getPosition().x < winDim.x-20)
         {
             player->move(vel, 0);
         }
     }
-    if(Keyboard::isKeyPressed(Keyboard::Left))
+    if(Keyboard::isKeyPressed(Keyboard::A))
     {
         if(player->getPosition().x > 20)
         {
