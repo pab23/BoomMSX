@@ -14,7 +14,7 @@ class Enemy
         virtual ~Enemy();
     protected:
     private:
-        sf::Sprite sprite;
+        sf::Sprite *sprite;
         unsigned int hp;
         unsigned int type;
 

@@ -28,9 +28,10 @@ Game::Game(Vector2i dim, float kVel)
     player->setPosition(390,520);
 
     //INICIALIZACION VARIABLES
-    //enemies = new vector<Enemy>;
-    //bullets = new vector<Bullet>;
+
+    //bullets = new vector<Bullet>(;
     creaEnemigos();
+
     creaMarcador();
     gameLoop();
 }
@@ -39,17 +40,11 @@ void Game::gameLoop()
 {
     while(window->isOpen())
     {
-        Event event;
-        while( window->pollEvent(event))
-        {
-            if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::Q))
-            {
-                window->close();
-            }
-        }
+
         bullet_cooldown = bullet_clock.getElapsedTime();
         escucharTeclado();
         procesarColisiones();
+        //enemies.move();
         dibujar();
     }
 }
@@ -61,15 +56,26 @@ void Game::dibujar()
     window->draw(*bgSprite);
     window->draw(*player);
     window->draw(*scoreT);
+
     for(unsigned i = 0; i < enemies.size(); i++)
         window->draw(enemies[i].getSprite());
+
     for( unsigned j = 0; j < bullets.size(); j++)
         window->draw(bullets[j].getSprite());
+
     window->display();
 }
 
 void Game::escucharTeclado()
 {
+    Event event;
+    while( window->pollEvent(event))
+    {
+        if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::Q))
+        {
+            window->close();
+        }
+    }
 
     if(Keyboard::isKeyPressed(Keyboard::Space) && bullet_cooldown.asSeconds() >= .4f)
     {
@@ -111,6 +117,7 @@ void Game::procesarColisiones()
         {
             for( unsigned j = 0; j < enemies.size(); j++)
             {
+
                 if(bullets[i].getBounds().intersects(enemies[j].getSprite().getGlobalBounds()))
                 {
                     bullets.erase(bullets.begin()+i);
@@ -120,6 +127,7 @@ void Game::procesarColisiones()
                     ss<<"SCORE: "<<score;
                     scoreT->setString(ss.str().c_str());
                 }
+
             }
         }
     }
@@ -128,23 +136,34 @@ void Game::procesarColisiones()
 void Game::creaEnemigos()
 {
     Sprite ex(*sheet);
-    ex.setTextureRect(IntRect(35,0, 32, 32));
+    vector<IntRect> guides;
+    guides.push_back(IntRect(35, 0, 32, 32));
+    guides.push_back(IntRect(35+32, 0, 32, 32));
+    guides.push_back(IntRect(2*32+35, 0, 32, 32));
+
+    int cont = 0;
+
+
     ex.rotate(-90);
     ex.setScale(1.25, 1.5);
     ex.setOrigin(16, 16);
 
-    int posX  = 150, posY = 100;
-    for( int i = 0; i < 12; i++){
+    int posX  = 100, posY = 100;
+    for( unsigned i = 0; i < 27; i++)
+    {
         ex.setPosition(posX , posY);
+        ex.setTextureRect(guides[cont]);
         Enemy aux(ex, 1, 0);
         enemies.push_back(aux);
-        posX += 100;
-        if(posX >= winDim.x-50){
-            posX = 150;
-            posY += 100;
+        posX += 75;
+        if(posX > winDim.x-100)
+        {
+            cont++;
+            posX = 100;
+            posY += 75;
         }
-
     }
+
 }
 
 void Game::creaMarcador()

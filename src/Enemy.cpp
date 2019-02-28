@@ -12,15 +12,14 @@ Enemy::Enemy( sf::Sprite fSprite, int fHp, int fType)
         type = fType;
     else
         type = 0;
-
-    sprite = fSprite;
+    sprite = new sf::Sprite(fSprite);
 }
 
 Enemy::~Enemy()
 {
-    //dtor
+    //delete sprite;
 }
 
 sf::Sprite Enemy::getSprite(){
-    return sprite;
+    return *sprite;
 }

@@ -74,3 +74,35 @@
 1550746731 source:/home/fv/BoomMSX/src/Game.cpp
 	"Game.h"
 
+1551344210 source:/home/pab23/Escritorio/BoomMSX/main.cpp
+	<SFML/Graphics.hpp>
+	<iostream>
+	<vector>
+	<sstream>
+	"Game.h"
+	"Enemy.h"
+	"Bullet.h"
+
+1551345832 /home/pab23/Escritorio/BoomMSX/include/Game.h
+	<vector>
+	<sstream>
+	<iostream>
+	"SFML/Graphics.hpp"
+	"Bullet.h"
+	"Enemy.h"
+
+1551344210 /home/pab23/Escritorio/BoomMSX/include/Bullet.h
+	<SFML/Graphics.hpp>
+
+1551345560 /home/pab23/Escritorio/BoomMSX/include/Enemy.h
+	<SFML/Graphics.hpp>
+
+1551344210 source:/home/pab23/Escritorio/BoomMSX/src/Bullet.cpp
+	"Bullet.h"
+
+1551346362 source:/home/pab23/Escritorio/BoomMSX/src/Enemy.cpp
+	"Enemy.h"
+
+1551346348 source:/home/pab23/Escritorio/BoomMSX/src/Game.cpp
+	"Game.h"
+
