@@ -24,6 +24,7 @@ class Game
         void procesarColisiones();
         void creaEnemigos();
         void creaMarcador();
+        void update();
 
     protected:
 
@@ -41,6 +42,7 @@ class Game
         Text *scoreT;
         Clock bullet_clock;
         Time bullet_cooldown;
+        bool dir = false;
 
 
 };

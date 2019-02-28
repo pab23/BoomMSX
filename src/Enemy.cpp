@@ -20,6 +20,19 @@ Enemy::~Enemy()
     //delete sprite;
 }
 
+
+void Enemy::move(Vector2i dir)
+{
+    sprite->move(dir.x*speed, dir.y*speed);
+}
+
+
+
 sf::Sprite Enemy::getSprite(){
     return *sprite;
+}
+
+Vector2f Enemy::getPosition()
+{
+    return sprite->getPosition();
 }

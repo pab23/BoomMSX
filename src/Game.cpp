@@ -42,10 +42,48 @@ void Game::gameLoop()
     {
 
         bullet_cooldown = bullet_clock.getElapsedTime();
-        escucharTeclado();
-        procesarColisiones();
-        //enemies.move();
+        update();
+
+
         dibujar();
+    }
+}
+
+void Game::update()
+{
+    bool down = false;;
+    escucharTeclado();
+    procesarColisiones();
+    for(unsigned z = 0; z < bullets.size(); z++ )
+        bullets[z].move();
+    for(unsigned i = 0; i < enemies.size(); i++)
+    {
+        if(enemies[i].getPosition().x >= winDim.x-25)
+        {
+            dir = true;
+            down = true;
+        }
+        else if(enemies[i].getPosition().x < 25)
+        {
+            dir = false;
+            down = true;
+        }
+    }
+    if(down)
+    {
+        for( unsigned i = 0; i < enemies.size(); i++)
+            enemies[i].move({0, 4});
+        down = false;
+    }
+    if(dir)
+    {
+        for( unsigned i = 0; i < enemies.size(); i++)
+            enemies[i].move({-1, 0});
+    }
+    else
+    {
+        for( unsigned i = 0; i < enemies.size(); i++)
+            enemies[i].move({1, 0});
     }
 }
 
@@ -96,10 +134,7 @@ void Game::escucharTeclado()
             player->move(-vel, 0);
         }
     }
-    for(unsigned z = 0; z < bullets.size(); z++ )
-    {
-        bullets[z].move();
-    }
+
 }
 
 void Game::procesarColisiones()
