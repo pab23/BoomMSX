@@ -17,7 +17,8 @@ Enemy::Enemy( sf::Sprite fSprite, int fHp, int fType)
 
 Enemy::~Enemy()
 {
-    //delete sprite;
+    delete sprite;
+    hp = type = 0;
 }
 
 

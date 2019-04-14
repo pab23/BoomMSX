@@ -1,10 +1,12 @@
 #include "Game.h"
 
-Game::Game(Vector2i dim, float kVel)
+Game::Game(Vector2i dim)
 {
     //PARAMETROS
     winDim = dim;
-    vel = kVel;
+
+    hud = new Hud();
+    state = true;
 
     //VENTANA
 
@@ -22,10 +24,7 @@ Game::Game(Vector2i dim, float kVel)
     bgSprite->scale(0.390625, 0.390625);
 
     //JUGADOR
-    player = new Sprite(*sheet);
-    player->setOrigin(17.5, 17.5);
-    player->setTextureRect(sf::IntRect(0, 0, 35, 35));
-    player->setPosition(390,520);
+    player = new Player(*sheet);
 
     //INICIALIZACION VARIABLES
 
@@ -42,6 +41,7 @@ void Game::gameLoop()
     {
 
         bullet_cooldown = bullet_clock.getElapsedTime();
+        enemy_cd = enemy_clock.getElapsedTime();
         update();
 
 
@@ -51,19 +51,26 @@ void Game::gameLoop()
 
 void Game::update()
 {
+    if(player->getHp() <= 0)
+    {
+        state = false;
+    }
     bool down = false;;
     escucharTeclado();
+    disparoEnemigo();
     procesarColisiones();
     for(unsigned z = 0; z < bullets.size(); z++ )
-        bullets[z].move();
+        bullets[z]->move(false);
+    for(unsigned z = 0; z < enemy_bullets.size(); z++ )
+        enemy_bullets[z]->move(true);
     for(unsigned i = 0; i < enemies.size(); i++)
     {
-        if(enemies[i].getPosition().x >= winDim.x-25)
+        if(enemies[i]->getPosition().x >= winDim.x-25)
         {
             dir = true;
             down = true;
         }
-        else if(enemies[i].getPosition().x < 25)
+        else if(enemies[i]->getPosition().x < 25)
         {
             dir = false;
             down = true;
@@ -72,18 +79,18 @@ void Game::update()
     if(down)
     {
         for( unsigned i = 0; i < enemies.size(); i++)
-            enemies[i].move({0, 4});
+            enemies[i]->move({0, 4});
         down = false;
     }
     if(dir)
     {
         for( unsigned i = 0; i < enemies.size(); i++)
-            enemies[i].move({-1, 0});
+            enemies[i]->move({-1, 0});
     }
     else
     {
         for( unsigned i = 0; i < enemies.size(); i++)
-            enemies[i].move({1, 0});
+            enemies[i]->move({1, 0});
     }
 }
 
@@ -92,14 +99,18 @@ void Game::dibujar()
     window->clear();
 
     window->draw(*bgSprite);
-    window->draw(*player);
+    window->draw(player->getSprite());
     window->draw(*scoreT);
+    if(!state)
+        window->draw(hud->textoMuerte());
 
     for(unsigned i = 0; i < enemies.size(); i++)
-        window->draw(enemies[i].getSprite());
+        window->draw(enemies[i]->getSprite());
 
     for( unsigned j = 0; j < bullets.size(); j++)
-        window->draw(bullets[j].getSprite());
+        window->draw(bullets[j]->getSprite());
+    for( unsigned j = 0; j < enemy_bullets.size(); j++)
+        window->draw(enemy_bullets[j]->getSprite());
 
     window->display();
 }
@@ -118,20 +129,20 @@ void Game::escucharTeclado()
     if(Keyboard::isKeyPressed(Keyboard::Space) && bullet_cooldown.asSeconds() >= .4f)
     {
         bullet_clock.restart();
-        bullets.push_back(Bullet(*sheet, player->getPosition().x, player->getPosition().y-26));
+        bullets.push_back(new Bullet(*sheet, {player->getPosition().x, player->getPosition().y-26}, DANO, 0));
     }
     if(Keyboard::isKeyPressed(Keyboard::D))
     {
         if(player->getPosition().x < winDim.x-20)
         {
-            player->move(vel, 0);
+            player->move(true);
         }
     }
     if(Keyboard::isKeyPressed(Keyboard::A))
     {
         if(player->getPosition().x > 20)
         {
-            player->move(-vel, 0);
+            player->move(false);
         }
     }
 
@@ -144,19 +155,26 @@ void Game::procesarColisiones()
 
     for(unsigned i = 0; i < bullets.size(); i++)
     {
-        if(bullets[i].getBounds().intersects(barrier))
+        if(bullets[i]->getPos().y < 0)
         {
+            Bullet *aux = bullets[i];
             bullets.erase(bullets.begin()+i);
+            delete aux;
         }
         else
         {
             for( unsigned j = 0; j < enemies.size(); j++)
             {
 
-                if(bullets[i].getBounds().intersects(enemies[j].getSprite().getGlobalBounds()))
+                if(bullets[i]->getBounds().intersects(enemies[j]->getSprite().getGlobalBounds()))
                 {
+
+                    Bullet *aux = bullets[i];
                     bullets.erase(bullets.begin()+i);
+                    delete aux;
+                    Enemy *auxEn = enemies[j];
                     enemies.erase(enemies.begin()+j);
+                    delete auxEn;
                     score++;
                     stringstream ss;
                     ss<<"SCORE: "<<score;
@@ -166,6 +184,23 @@ void Game::procesarColisiones()
             }
         }
     }
+    for(unsigned i = 0; i < enemy_bullets.size(); i++)
+    {
+        if(enemy_bullets[i]->getBounds().intersects(player->getBounds()))
+        {
+            player->setVida(-enemy_bullets[i]->getDmg());
+            Bullet *aux = enemy_bullets[i];
+            enemy_bullets.erase(enemy_bullets.begin()+i);
+            delete aux;
+        }
+        else if(enemy_bullets[i]->getPos().y > winDim.y)
+        {
+            Bullet *aux = enemy_bullets[i];
+            enemy_bullets.erase(enemy_bullets.begin()+i);
+            delete aux;
+        }
+    }
+
 }
 
 void Game::creaEnemigos()
@@ -188,8 +223,7 @@ void Game::creaEnemigos()
     {
         ex.setPosition(posX , posY);
         ex.setTextureRect(guides[cont]);
-        Enemy aux(ex, 1, 0);
-        enemies.push_back(aux);
+        enemies.push_back(new Enemy(ex, 1, 0));
         posX += 75;
         if(posX > winDim.x-100)
         {
@@ -213,3 +247,20 @@ void Game::creaMarcador()
     scoreT->setOrigin(0, 25);
     scoreT->setPosition(30, 570);
 }
+
+
+void Game::disparoEnemigo()
+{
+    for(unsigned i = 0; i < enemies.size(); i++)
+    {
+        if(abs(enemies[i]->getPosition().x - player->getPosition().x) < 5 && enemy_cd.asSeconds() >= 2)
+        {
+            enemy_clock.restart();
+            enemy_bullets.push_back(new Bullet(*sheet, enemies[i]->getPosition(), 10, 1));
+
+        }
+
+    }
+    cout<<"balas: "<<enemy_bullets.size()<<endl;
+}
+

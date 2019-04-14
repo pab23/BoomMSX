@@ -2,35 +2,54 @@
 
 #define bulletSpeed 6
 
-Bullet::Bullet()
+
+Bullet::Bullet(Texture &texture, Vector2f pos, int dano, int type)
 {
-    //ctor
+    sprite = new Sprite(texture);
+    sprite->setOrigin(10, 10);
+    sprite->setTextureRect(sf::IntRect(35+(32*4), 0, 20, 20));
+    sprite->setPosition(pos);
+    dmg = dano;
+
+    if(type != 0)
+        rotate();
 }
 
-Bullet::Bullet(sf::Texture &texture, float pos_x, float pos_y)
+Bullet::~Bullet()
 {
-    sprite = sf::Sprite(texture);
-    sprite.setOrigin(10, 10);
-    sprite.setTextureRect(sf::IntRect(35+(32*4), 0, 20, 20));
-    sprite.setPosition(pos_x, pos_y);
+    delete sprite;
+    dmg = 0;
+}
+void Bullet::move(bool dir)
+{
+    if(dir)
+        sprite->move(0, bulletSpeed);
+    else
+        sprite->move(0, -bulletSpeed);
 }
 
-void Bullet::move()
+void Bullet::rotate()
 {
-    sprite.move(0, -bulletSpeed);
+    sprite->rotate(180);
 }
 
-sf::Sprite Bullet::getSprite()
+Sprite Bullet::getSprite()
 {
-    return sprite;
+    return *sprite;
 }
 
-sf::Vector2f Bullet::getPos()
+Vector2f Bullet::getPos()
 {
-    return sprite.getPosition();
+    return sprite->getPosition();
 }
 
-sf::FloatRect Bullet::getBounds()
+FloatRect Bullet::getBounds()
 {
-    return sprite.getGlobalBounds();
+    return sprite->getGlobalBounds();
 }
+
+int Bullet::getDmg()
+{
+    return dmg;
+}
+

@@ -3,21 +3,28 @@
 
 #include <SFML/Graphics.hpp>
 
+using namespace sf;
+using namespace std;
+
 class Bullet
 {
     public:
-        Bullet();
-        Bullet(sf::Texture&, float, float);
-        sf::FloatRect getBounds();
+        Bullet(Texture&, Vector2f, int, int);
+        FloatRect getBounds();
+        ~Bullet();
 
-        void move();
-        sf::Sprite getSprite();
-        sf::Vector2f getPos();
+        void move(bool);
+        void rotate();
+
+        Sprite getSprite();
+        Vector2f getPos();
+        int getDmg();
 
     protected:
 
     private:
-        sf::Sprite sprite;
+        Sprite* sprite;
+        int dmg;
 };
 
 #endif // BULLET_H
