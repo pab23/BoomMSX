@@ -10,6 +10,7 @@ Game::Game(Vector2i dim)
     hud = new Hud();
     state = true;
     dead = false;
+    cont = 0;
 
     //VENTANA
 
@@ -92,7 +93,16 @@ void Game::dibujar()
     window->draw(player->getSprite());
     window->draw(*scoreT);
     if(!state)
+    {
         window->draw(hud->textoMuerte());
+        if(text_clock.getElapsedTime().asMilliseconds() >= 500)
+        {
+            window->draw(hud->subTextMuerte());
+            if(text_clock.getElapsedTime().asMilliseconds() >= 1000)
+                text_clock.restart();
+        }
+    }
+
 
     for(unsigned i = 0; i < enemies.size(); i++)
         window->draw(enemies[i]->getSprite());
@@ -134,6 +144,10 @@ void Game::escucharTeclado()
         {
             player->move(false, mili);
         }
+    }
+    if(Keyboard::isKeyPressed(Keyboard::R))
+    {
+        restart();
     }
 
 }
@@ -320,5 +334,21 @@ bool Game::enemigoDentro()
         return true;
     }
     return false;
+}
+
+void Game::restart()
+{
+    for(unsigned i = 0; i < enemies.size(); i++)
+    {
+        Enemy *auxEn = enemies[elegido];
+        enemies.erase(enemies.begin()+elegido);
+        delete auxEn;
+    }
+    for(unsigned i = 0; i < bullets.size(); i++)
+    {
+        Bullet *aux = enemy_bullets[i];
+        enemy_bullets.erase(enemy_bullets.begin()+i);
+        delete aux;
+    }
 }
 

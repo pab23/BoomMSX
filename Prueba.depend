@@ -115,7 +115,7 @@
 	"Enemy.h"
 	"Bullet.h"
 
-1555404833 /home/fv/Escritorio/BoomMSX/include/Game.h
+1555407386 /home/fv/Escritorio/BoomMSX/include/Game.h
 	<vector>
 	<sstream>
 	<iostream>
@@ -139,7 +139,7 @@
 1555403103 source:/home/fv/Escritorio/BoomMSX/src/Enemy.cpp
 	"Enemy.h"
 
-1555404940 source:/home/fv/Escritorio/BoomMSX/src/Game.cpp
+1555407055 source:/home/fv/Escritorio/BoomMSX/src/Game.cpp
 	"Game.h"
 
 1555403472 /home/fv/Escritorio/BoomMSX/include/Player.h
@@ -149,9 +149,9 @@
 1555403666 source:/home/fv/Escritorio/BoomMSX/src/Player.cpp
 	"Player.h"
 
-1555261094 /home/fv/Escritorio/BoomMSX/include/Hud.h
+1555406958 /home/fv/Escritorio/BoomMSX/include/Hud.h
 	"SFML/Graphics.hpp"
 
-1555261320 source:/home/fv/Escritorio/BoomMSX/src/Hud.cpp
+1555407087 source:/home/fv/Escritorio/BoomMSX/src/Hud.cpp
 	"Hud.h"
 

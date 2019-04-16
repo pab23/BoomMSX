@@ -14,11 +14,13 @@ class Hud
         virtual ~Hud();
 
         Text textoMuerte();
+        Text subTextMuerte();
+
+        int getCont();
 
     private:
 
     Font* fuente;
-
 };
 
 #endif // HUD_H
