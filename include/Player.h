@@ -1,6 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <iostream>
+
 #include "SFML/Graphics.hpp"
 
 #define MAX_VIDA 50
@@ -15,7 +17,7 @@ class Player
         Player(Texture&);
         virtual ~Player();
 
-        void move(bool);
+        void move(bool, float);
 
         void setVida(int);
         Sprite getSprite();

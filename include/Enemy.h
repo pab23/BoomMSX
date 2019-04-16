@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#define speed 0.5
+#define SPEED 0.5
 
 using namespace sf;
 
@@ -15,10 +15,11 @@ class Enemy
         virtual ~Enemy();
 
         void hit();
-        void move(Vector2i);
+        void move(Vector2f, float);
 
         Sprite getSprite();
         Vector2f getPosition();
+        FloatRect getBounds();
 
     protected:
     private:

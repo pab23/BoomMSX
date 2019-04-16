@@ -22,9 +22,9 @@ Enemy::~Enemy()
 }
 
 
-void Enemy::move(Vector2i dir)
+void Enemy::move(Vector2f dir, float time)
 {
-    sprite->move(dir.x*speed, dir.y*speed);
+    sprite->move(dir.x * SPEED * time * 1000, dir.y * SPEED * time * 1000);
 }
 
 
@@ -36,4 +36,8 @@ sf::Sprite Enemy::getSprite(){
 Vector2f Enemy::getPosition()
 {
     return sprite->getPosition();
+}
+FloatRect Enemy::getBounds()
+{
+    return sprite->getGlobalBounds();
 }

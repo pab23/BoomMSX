@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#define BULLET_SPEED 6
+
 using namespace sf;
 using namespace std;
 
@@ -13,7 +15,7 @@ class Bullet
         FloatRect getBounds();
         ~Bullet();
 
-        void move(bool);
+        void move(bool, float);
         void rotate();
 
         Sprite getSprite();

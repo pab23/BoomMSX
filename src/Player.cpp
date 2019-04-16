@@ -16,22 +16,24 @@ Player::~Player()
     delete spr;
     hp = 0;
 }
-void Player::move(bool dir)
+void Player::move(bool dir, float time)
 {
     if(dir)
-        spr->move(SPEED, 0);
+        spr->move((SPEED * time * 1000), 0);
     else
-        spr->move(-SPEED, 0);
+        spr->move((-SPEED * time * 1000), 0);
 }
 
 void Player::setVida(int vi)
 {
-    if(hp +vi < MAX_VIDA)
+    if(hp + vi < MAX_VIDA && hp + vi > 0)
         hp += vi;
-    else if(hp + vi < 0)
+    else if(hp + vi <= 0)
         hp = 0;
     else
         hp = MAX_VIDA;
+
+    cout << "HP: " << hp << endl;
 }
 
 Sprite Player::getSprite()

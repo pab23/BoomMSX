@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-#define bulletSpeed 6
+
 
 
 Bullet::Bullet(Texture &texture, Vector2f pos, int dano, int type)
@@ -20,12 +20,12 @@ Bullet::~Bullet()
     delete sprite;
     dmg = 0;
 }
-void Bullet::move(bool dir)
+void Bullet::move(bool dir, float time)
 {
     if(dir)
-        sprite->move(0, bulletSpeed);
+        sprite->move(0, BULLET_SPEED * time * 1000);
     else
-        sprite->move(0, -bulletSpeed);
+        sprite->move(0, -(BULLET_SPEED * time * 1000));
 }
 
 void Bullet::rotate()

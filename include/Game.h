@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 #include "SFML/Graphics.hpp"
 
@@ -14,6 +15,7 @@
 #include "Hud.h"
 
 #define DANO 10
+#define UPDATE_RATIO 1000/30
 
 using namespace sf;
 using namespace std;
@@ -32,6 +34,9 @@ class Game
         void update();
         void disparoEnemigo();
         void colisionJugador();
+        void mueveEnemigos();
+        void mueveBalas();
+        bool enemigoDentro();
 
     protected:
 
@@ -43,14 +48,15 @@ class Game
         vector<Bullet*> bullets, enemy_bullets;
         vector<Enemy*> enemies;
         Vector2i winDim;
-        unsigned int score = 0;
+        unsigned int score = 0, elegido;
         Font *font;
         Text *scoreT;
-        Clock bullet_clock, enemy_clock;
-        Time bullet_cooldown, enemy_cd;
-        bool dir = false, state;
+        Clock bullet_clock, enemy_clock, game_clock, select_clock, dmg_clock;
+        Time bullet_cooldown, enemy_cd, game_timer, select_timer;
+        bool dir = false, state, dead;
         Player* player;
         Hud* hud;
+        float mili;
 
 
 };
