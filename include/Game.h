@@ -36,8 +36,9 @@ class Game
         void colisionJugador();
         void mueveEnemigos();
         void mueveBalas();
-        bool enemigoDentro();
+        void enemigoDentro();
         void restart();
+        void muere(int);
 
     protected:
 

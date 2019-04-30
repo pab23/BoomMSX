@@ -16,10 +16,12 @@ class Enemy
 
         void hit();
         void move(Vector2f, float);
+        int gestionaVida(int);
 
         Sprite getSprite();
         Vector2f getPosition();
         FloatRect getBounds();
+        int getHp();
 
     protected:
     private:

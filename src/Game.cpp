@@ -62,36 +62,33 @@ void Game::gameLoop()
 
 void Game::update()
 {
-    if(player->getHp() <= 0)
+    if(player->getHp() <= 0 || enemies.size() == 0)
     {
         state = false;
     }
+
     escucharTeclado();
-    if(dead)
+    if(state)
     {
-        elegido = rand() % enemies.size();
-        dead = false;
-        cout << elegido << endl;
-    }
-    else if(enemigoDentro())
-    {
-        elegido = rand() % enemies.size();
-        cout << elegido <<endl;
+        enemigoDentro();
+        if(dead)
+        {
+            elegido = rand() % enemies.size();
+            dead = false;
+            cout << elegido << " / " << enemies.size() << endl;
+        }
+        disparoEnemigo();
+        mueveEnemigos();
+        mueveBalas();
+        procesarColisiones();
     }
 
-    disparoEnemigo();
-    mueveEnemigos();
-    mueveBalas();
-    procesarColisiones();
 }
 
 void Game::dibujar()
 {
     window->clear();
-
     window->draw(*bgSprite);
-    window->draw(player->getSprite());
-    window->draw(*scoreT);
     if(!state)
     {
         window->draw(hud->textoMuerte());
@@ -102,15 +99,20 @@ void Game::dibujar()
                 text_clock.restart();
         }
     }
+    else
+    {
 
+        window->draw(player->getSprite());
+        window->draw(*scoreT);
+        for(unsigned i = 0; i < enemies.size(); i++)
+            window->draw(enemies[i]->getSprite());
 
-    for(unsigned i = 0; i < enemies.size(); i++)
-        window->draw(enemies[i]->getSprite());
+        for( unsigned j = 0; j < bullets.size(); j++)
+            window->draw(bullets[j]->getSprite());
+        for( unsigned j = 0; j < enemy_bullets.size(); j++)
+            window->draw(enemy_bullets[j]->getSprite());
+    }
 
-    for( unsigned j = 0; j < bullets.size(); j++)
-        window->draw(bullets[j]->getSprite());
-    for( unsigned j = 0; j < enemy_bullets.size(); j++)
-        window->draw(enemy_bullets[j]->getSprite());
 
     window->display();
 }
@@ -176,15 +178,15 @@ void Game::procesarColisiones()
                     Bullet *aux = bullets[i];
                     bullets.erase(bullets.begin()+i);
                     delete aux;
-                    Enemy *auxEn = enemies[j];
-                    if(j == elegido)
-                        dead = true;
-                    enemies.erase(enemies.begin()+j);
-                    delete auxEn;
+                    if(enemies[j]->gestionaVida(-1) <= 0)
+                    {
+                        muere(j);
+                    }
                     score++;
                     stringstream ss;
                     ss<<"SCORE: "<<score;
                     scoreT->setString(ss.str().c_str());
+                    break;
                 }
 
             }
@@ -272,15 +274,16 @@ void Game::creaEnemigos()
     ex.setScale(1.25, 1.5);
     ex.setOrigin(16, 16);
 
-    int posX  = 100, posY = 100;
+    int posX  = 100, posY = 100, hp = 3;
     for( unsigned i = 0; i < 27; i++)
     {
         ex.setPosition(posX , posY);
         ex.setTextureRect(guides[cont]);
-        enemies.push_back(new Enemy(ex, 1, 0));
+        enemies.push_back(new Enemy(ex, hp, 0));
         posX += 75;
         if(posX > winDim.x-100)
         {
+            hp--;
             cont++;
             posX = 100;
             posY += 75;
@@ -322,7 +325,7 @@ void Game::disparoEnemigo()
 
 }
 
-bool Game::enemigoDentro()
+void Game::enemigoDentro()
 {
 
     if(enemies[elegido]->getPosition().y > winDim.y)
@@ -331,9 +334,7 @@ bool Game::enemigoDentro()
         enemies.erase(enemies.begin()+elegido);
         delete auxEn;
         dead = true;
-        return true;
     }
-    return false;
 }
 
 void Game::restart()
@@ -350,5 +351,14 @@ void Game::restart()
         enemy_bullets.erase(enemy_bullets.begin()+i);
         delete aux;
     }
+}
+
+void Game::muere(int j)
+{
+    Enemy *auxEn = enemies[j];
+    if(j == elegido)
+        dead = true;
+    enemies.erase(enemies.begin()+j);
+    delete auxEn;
 }
 

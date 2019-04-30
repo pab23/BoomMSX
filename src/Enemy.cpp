@@ -27,7 +27,11 @@ void Enemy::move(Vector2f dir, float time)
     sprite->move(dir.x * SPEED * time * 1000, dir.y * SPEED * time * 1000);
 }
 
-
+int Enemy::gestionaVida(int sum)
+{
+    hp = hp + sum;
+    return hp;
+}
 
 sf::Sprite Enemy::getSprite(){
     return *sprite;
@@ -41,3 +45,10 @@ FloatRect Enemy::getBounds()
 {
     return sprite->getGlobalBounds();
 }
+
+int Enemy::getHp()
+{
+    return hp;
+}
+
+
