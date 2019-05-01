@@ -3,13 +3,12 @@
 Game::Game(Vector2i dim)
 {
 
-    srand(NULL);
+    srand(time(NULL));
     //PARAMETROS
     winDim = dim;
 
     hud = new Hud();
     state = true;
-    dead = false;
     cont = 0;
 
     //VENTANA
@@ -32,9 +31,10 @@ Game::Game(Vector2i dim)
 
     //INICIALIZACION VARIABLES
 
-    //bullets = new vector<Bullet>(;
+    god = false;
     creaEnemigos();
-    elegido = rand() % 27;
+    dead = false;
+    elige();
     creaMarcador();
     gameLoop();
 }
@@ -71,16 +71,15 @@ void Game::update()
     if(state)
     {
         enemigoDentro();
+        procesarColisiones();
         if(dead)
         {
-            elegido = rand() % enemies.size();
-            dead = false;
-            cout << elegido << " / " << enemies.size() << endl;
+            elige();
         }
         disparoEnemigo();
         mueveEnemigos();
         mueveBalas();
-        procesarColisiones();
+
     }
 
 }
@@ -103,7 +102,7 @@ void Game::dibujar()
     {
 
         window->draw(player->getSprite());
-        window->draw(*scoreT);
+
         for(unsigned i = 0; i < enemies.size(); i++)
             window->draw(enemies[i]->getSprite());
 
@@ -112,7 +111,7 @@ void Game::dibujar()
         for( unsigned j = 0; j < enemy_bullets.size(); j++)
             window->draw(enemy_bullets[j]->getSprite());
     }
-
+    window->draw(*scoreT);
 
     window->display();
 }
@@ -125,6 +124,16 @@ void Game::escucharTeclado()
         if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::Q))
         {
             window->close();
+        }
+        if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::G))
+        {
+            god = !god;
+            cout << "God mode: ";
+            if(god)
+                cout<< "Enabled";
+            else
+                cout<<"Disabled";
+            cout<<endl;
         }
     }
 
@@ -151,6 +160,7 @@ void Game::escucharTeclado()
     {
         restart();
     }
+
 
 }
 
@@ -180,7 +190,7 @@ void Game::procesarColisiones()
                     delete aux;
                     if(enemies[j]->gestionaVida(-1) <= 0)
                     {
-                        muere(j);
+                        muere(enemies[j]);
                     }
                     score++;
                     stringstream ss;
@@ -196,7 +206,8 @@ void Game::procesarColisiones()
     {
         if(enemy_bullets[i]->getBounds().intersects(player->getBounds()))
         {
-            player->setVida(-enemy_bullets[i]->getDmg());
+            if(!god)
+                player->setVida(-enemy_bullets[i]->getDmg());
             Bullet *aux = enemy_bullets[i];
             enemy_bullets.erase(enemy_bullets.begin()+i);
             delete aux;
@@ -208,7 +219,7 @@ void Game::procesarColisiones()
             delete aux;
         }
     }
-    if(enemies[elegido]->getBounds().intersects(player->getBounds()) && dmg_clock.getElapsedTime().asSeconds() < 2.f)
+    if(elegido->getBounds().intersects(player->getBounds()) && dmg_clock.getElapsedTime().asSeconds() < 2.f)
     {
         player->setVida(-DANO);
         dmg_clock.restart();
@@ -310,17 +321,17 @@ void Game::disparoEnemigo()
 {
     Vector2f dir, normalizada;
 
-    dir = player->getPosition() - enemies[elegido]->getPosition();
-    normalizada.x = dir.x / sqrt(pow(dir.x, 2) + pow(dir.y, 2)) * 4;
+    dir = player->getPosition() - elegido->getPosition();
+    normalizada.x = dir.x / sqrt(pow(dir.x, 2) + pow(dir.y, 2)) * 6;
     normalizada.y = dir.y / sqrt(pow(dir.x, 2) + pow(dir.y, 2)) * 4;
-    if(enemies[elegido]->getPosition().y < player->getPosition().y -25)
-        enemies[elegido]->move(normalizada, mili);
+    if(elegido->getPosition().y < player->getPosition().y -30)
+        elegido->move(normalizada, mili);
     else
-        enemies[elegido]->move({0, 4}, mili);
-    if(abs(enemies[elegido]->getPosition().x - player->getPosition().x) < 20 && enemy_cd.asSeconds() >= 1.f)
+        elegido->move({0, 4}, mili);
+    if(abs(elegido->getPosition().x - player->getPosition().x) < 20 && enemy_cd.asSeconds() >= 1.f)
     {
         enemy_clock.restart();
-        enemy_bullets.push_back(new Bullet(*sheet, enemies[elegido]->getPosition(), 10, 1));
+        enemy_bullets.push_back(new Bullet(*sheet, elegido->getPosition(), 10, 1));
     }
 
 }
@@ -328,37 +339,63 @@ void Game::disparoEnemigo()
 void Game::enemigoDentro()
 {
 
-    if(enemies[elegido]->getPosition().y > winDim.y)
+    if(elegido->getPosition().y > winDim.y)
     {
-        Enemy *auxEn = enemies[elegido];
-        enemies.erase(enemies.begin()+elegido);
-        delete auxEn;
-        dead = true;
+        muere(elegido);
     }
 }
 
 void Game::restart()
 {
-    for(unsigned i = 0; i < enemies.size(); i++)
+    while(enemies.size() != 0)
     {
-        Enemy *auxEn = enemies[elegido];
-        enemies.erase(enemies.begin()+elegido);
+        Enemy *auxEn = enemies[0];
+        enemies.erase(enemies.begin());
         delete auxEn;
     }
-    for(unsigned i = 0; i < bullets.size(); i++)
+    while(enemy_bullets.size() != 0)
     {
-        Bullet *aux = enemy_bullets[i];
-        enemy_bullets.erase(enemy_bullets.begin()+i);
+        Bullet *aux = enemy_bullets[0];
+        enemy_bullets.erase(enemy_bullets.begin());
         delete aux;
     }
+    while( bullets.size() != 0)
+    {
+        Bullet *aux = bullets[0];
+        bullets.erase(bullets.begin());
+        delete aux;
+    }
+    creaEnemigos();
+    score = 0;
+    creaMarcador();
+    player = new Player(*sheet);
+    state = true;
+    elige();
 }
 
-void Game::muere(int j)
+void Game::muere(Enemy* j)
 {
-    Enemy *auxEn = enemies[j];
+
+    for(unsigned i = 0; i < enemies.size(); i++)
+    {
+        if(enemies[i] == j)
+        {
+            enemies.erase(enemies.begin()+ i);
+            break;
+        }
+    }
     if(j == elegido)
+    {
         dead = true;
-    enemies.erase(enemies.begin()+j);
-    delete auxEn;
+        elige();
+    }
+    delete j;
+}
+
+void Game::elige()
+{
+    if(enemies.size() != 0)
+    elegido = enemies[rand() % enemies.size()];
+    dead = false;
 }
 

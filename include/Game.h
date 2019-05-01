@@ -38,7 +38,8 @@ class Game
         void mueveBalas();
         void enemigoDentro();
         void restart();
-        void muere(int);
+        void muere(Enemy*);
+        void elige();
 
     protected:
 
@@ -50,15 +51,16 @@ class Game
         vector<Bullet*> bullets, enemy_bullets;
         vector<Enemy*> enemies;
         Vector2i winDim;
-        unsigned int score = 0, elegido, cont;
+        unsigned int score = 0, cont;
         Font *font;
         Text *scoreT;
         Clock bullet_clock, enemy_clock, game_clock, select_clock, dmg_clock, text_clock;
         Time bullet_cooldown, enemy_cd, game_timer, select_timer;
-        bool dir = false, state, dead;
+        bool dir = false, state, dead, god;
         Player* player;
         Hud* hud;
         float mili;
+        Enemy *elegido;
 
 
 };
