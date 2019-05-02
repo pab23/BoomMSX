@@ -26,8 +26,16 @@ Game::Game(Vector2i dim)
     bgSprite = new Sprite(*bg);
     bgSprite->scale(0.390625, 0.390625);
 
+
+
     //JUGADOR
     player = new Player(*sheet);
+
+    for(unsigned i = 0; i < sizeof(lifes); i++)
+    {
+        lifes[i] = new Sprite(player->getSprite());
+        lifes[i]->setPosition(20+(i*20), 570);
+    }
 
     //INICIALIZACION VARIABLES
 
@@ -191,11 +199,12 @@ void Game::procesarColisiones()
                     if(enemies[j]->gestionaVida(-1) <= 0)
                     {
                         muere(enemies[j]);
+                        score+= enemies[j]->getType()*10+10;
+                        stringstream ss;
+                        ss<<"SCORE "<<score;
+                        scoreT->setString(ss.str().c_str());
                     }
-                    score++;
-                    stringstream ss;
-                    ss<<"SCORE: "<<score;
-                    scoreT->setString(ss.str().c_str());
+
                     break;
                 }
 
@@ -307,13 +316,13 @@ void Game::creaMarcador()
 {
 
     std::stringstream ss;
-    ss <<"SCORE: "<< score;
+    ss <<"SCORE  "<< score;
     font = new Font;
     font->loadFromFile("ARCADE.TTF");
     scoreT = new Text(ss.str().c_str(), *font);
     scoreT->setCharacterSize(25);
-    scoreT->setOrigin(0, 25);
-    scoreT->setPosition(30, 570);
+    scoreT->setOrigin(125, 25);
+    scoreT->setPosition(winDim.x/2, 570);
 }
 
 

@@ -50,5 +50,9 @@ int Enemy::getHp()
 {
     return hp;
 }
+int Enemy::getType()
+{
+    return type;
+}
 
 

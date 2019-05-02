@@ -61,6 +61,7 @@ class Game
         Hud* hud;
         float mili;
         Enemy *elegido;
+        Sprite *lifes[2];
 
 
 };

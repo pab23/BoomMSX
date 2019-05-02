@@ -22,6 +22,7 @@ class Enemy
         Vector2f getPosition();
         FloatRect getBounds();
         int getHp();
+        int getType();
 
     protected:
     private:
