@@ -19,15 +19,15 @@ class Player
 
         void move(bool, float);
 
-        void setVida(int);
         Sprite getSprite();
         Vector2f getPosition();
         FloatRect getBounds();
-        int getHp();
+
+        void resetPosition();
+
 
     private:
         Sprite* spr;
-        int hp;
 };
 
 #endif // PLAYER_H

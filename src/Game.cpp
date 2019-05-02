@@ -31,17 +31,11 @@ Game::Game(Vector2i dim)
     //JUGADOR
     player = new Player(*sheet);
 
-    for(unsigned i = 0; i < sizeof(lifes); i++)
-    {
-        lifes[i] = new Sprite(player->getSprite());
-        lifes[i]->setPosition(20+(i*20), 570);
-    }
 
     //INICIALIZACION VARIABLES
-
-    god = false;
+    alive = true;
+    info = dead = god = false;
     creaEnemigos();
-    dead = false;
     elige();
     creaMarcador();
     gameLoop();
@@ -70,7 +64,7 @@ void Game::gameLoop()
 
 void Game::update()
 {
-    if(player->getHp() <= 0 || enemies.size() == 0)
+    if((lifes.empty() && !alive) || enemies.size() == 0)
     {
         state = false;
     }
@@ -112,14 +106,29 @@ void Game::dibujar()
         window->draw(player->getSprite());
 
         for(unsigned i = 0; i < enemies.size(); i++)
+        {
             window->draw(enemies[i]->getSprite());
-
+            if(info)
+                window->draw(enemies[i]->getColBox());
+        }
         for( unsigned j = 0; j < bullets.size(); j++)
+        {
             window->draw(bullets[j]->getSprite());
+            if(info)
+                window->draw(bullets[j]->getColBox());
+        }
+
         for( unsigned j = 0; j < enemy_bullets.size(); j++)
+        {
             window->draw(enemy_bullets[j]->getSprite());
+            if(info)
+                window->draw(enemy_bullets[j]->getColBox());
+        }
+
     }
     window->draw(*scoreT);
+    for(unsigned i = 0; i < lifes.size(); i++)
+        window->draw(*lifes[i]);
 
     window->display();
 }
@@ -132,6 +141,10 @@ void Game::escucharTeclado()
         if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::Q))
         {
             window->close();
+        }
+        if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::I))
+        {
+            info = !info;
         }
         if((event.type == Event::KeyPressed) && (event.key.code == Keyboard::G))
         {
@@ -196,15 +209,11 @@ void Game::procesarColisiones()
                     Bullet *aux = bullets[i];
                     bullets.erase(bullets.begin()+i);
                     delete aux;
-                    if(enemies[j]->gestionaVida(-1) <= 0)
-                    {
-                        muere(enemies[j]);
-                        score+= enemies[j]->getType()*10+10;
-                        stringstream ss;
-                        ss<<"SCORE "<<score;
-                        scoreT->setString(ss.str().c_str());
-                    }
-
+                    muere(enemies[j]);
+                    score+= enemies[j]->getType()*10+10;
+                    stringstream ss;
+                    ss<<"SCORE "<<score;
+                    scoreT->setString(ss.str().c_str());
                     break;
                 }
 
@@ -216,7 +225,15 @@ void Game::procesarColisiones()
         if(enemy_bullets[i]->getBounds().intersects(player->getBounds()))
         {
             if(!god)
-                player->setVida(-enemy_bullets[i]->getDmg());
+            {
+                if(!lifes.empty())
+                    lifes.erase(lifes.end()-1);
+                else
+                    alive = false;
+
+                player->resetPosition();
+            }
+
             Bullet *aux = enemy_bullets[i];
             enemy_bullets.erase(enemy_bullets.begin()+i);
             delete aux;
@@ -230,7 +247,16 @@ void Game::procesarColisiones()
     }
     if(elegido->getBounds().intersects(player->getBounds()) && dmg_clock.getElapsedTime().asSeconds() < 2.f)
     {
-        player->setVida(-DANO);
+        if(!god)
+        {
+            if(!lifes.empty())
+                lifes.erase(lifes.end()-1);
+            else
+                alive = false;
+
+            player->resetPosition();
+        }
+
         dmg_clock.restart();
     }
 
@@ -294,16 +320,16 @@ void Game::creaEnemigos()
     ex.setScale(1.25, 1.5);
     ex.setOrigin(16, 16);
 
-    int posX  = 100, posY = 100, hp = 3;
+    int posX  = 100, posY = 100, type = 2;
     for( unsigned i = 0; i < 27; i++)
     {
         ex.setPosition(posX , posY);
         ex.setTextureRect(guides[cont]);
-        enemies.push_back(new Enemy(ex, hp, 0));
+        enemies.push_back(new Enemy(ex, type));
         posX += 75;
         if(posX > winDim.x-100)
         {
-            hp--;
+            type--;
             cont++;
             posX = 100;
             posY += 75;
@@ -323,6 +349,12 @@ void Game::creaMarcador()
     scoreT->setCharacterSize(25);
     scoreT->setOrigin(125, 25);
     scoreT->setPosition(winDim.x/2, 570);
+
+    for(unsigned i = 0; i < 2; i++)
+    {
+        lifes.push_back(new Sprite(player->getSprite()));
+        lifes[i]->setPosition(45+(i*45), 570);
+    }
 }
 
 
@@ -374,11 +406,17 @@ void Game::restart()
         bullets.erase(bullets.begin());
         delete aux;
     }
+    while( lifes.size() != 0)
+    {
+        Sprite *aux = lifes[0];
+        lifes.erase(lifes.begin());
+        delete aux;
+    }
     creaEnemigos();
     score = 0;
     creaMarcador();
-    player = new Player(*sheet);
     state = true;
+    alive = true;
     elige();
 }
 

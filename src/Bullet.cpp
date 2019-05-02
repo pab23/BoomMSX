@@ -9,6 +9,11 @@ Bullet::Bullet(Texture &texture, Vector2f pos, int dano, int type)
     sprite->setOrigin(10, 10);
     sprite->setTextureRect(sf::IntRect(35+(32*4), 0, 20, 20));
     sprite->setPosition(pos);
+
+    collision_box = new CircleShape(6);
+    collision_box->setOrigin(6,6);
+    collision_box->setPosition(getPos());
+    collision_box->setFillColor({0,255,0});
     dmg = dano;
 
     if(type != 0)
@@ -23,9 +28,17 @@ Bullet::~Bullet()
 void Bullet::move(bool dir, float time)
 {
     if(dir)
+    {
         sprite->move(0, BULLET_SPEED * time * 1000);
+        collision_box->move(0, BULLET_SPEED * time * 1000);
+    }
     else
+    {
         sprite->move(0, -(BULLET_SPEED * time * 1000));
+        collision_box->move(0, -(BULLET_SPEED * time * 1000));
+
+    }
+
 }
 
 void Bullet::rotate()
@@ -45,11 +58,15 @@ Vector2f Bullet::getPos()
 
 FloatRect Bullet::getBounds()
 {
-    return sprite->getGlobalBounds();
+    return collision_box->getGlobalBounds();
 }
 
 int Bullet::getDmg()
 {
     return dmg;
+}
+CircleShape Bullet::getColBox()
+{
+    return *collision_box;
 }
 

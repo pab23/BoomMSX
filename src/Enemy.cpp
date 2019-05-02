@@ -2,36 +2,34 @@
 
 
 
-Enemy::Enemy( sf::Sprite fSprite, int fHp, int fType)
+Enemy::Enemy( sf::Sprite fSprite, int fType)
 {
-    if(fHp > 0)
-        hp = fHp;
-    else
-        hp = 1;
     if(fType >= 0 && fType < 3)
         type = fType;
     else
         type = 0;
-    sprite = new sf::Sprite(fSprite);
+    sprite = new Sprite(fSprite);
+    collision_box = new RectangleShape({28,28});
+    collision_box->setOrigin(14, 14);
+    collision_box->setPosition(getPosition());
+    collision_box->setFillColor({255,0,0});
 }
 
 Enemy::~Enemy()
 {
     delete sprite;
-    hp = type = 0;
+    delete collision_box;
 }
 
 
 void Enemy::move(Vector2f dir, float time)
 {
     sprite->move(dir.x * SPEED * time * 1000, dir.y * SPEED * time * 1000);
+    collision_box->move(dir.x * SPEED * time * 1000, dir.y * SPEED * time * 1000);
+
 }
 
-int Enemy::gestionaVida(int sum)
-{
-    hp = hp + sum;
-    return hp;
-}
+
 
 sf::Sprite Enemy::getSprite(){
     return *sprite;
@@ -43,16 +41,16 @@ Vector2f Enemy::getPosition()
 }
 FloatRect Enemy::getBounds()
 {
-    return sprite->getGlobalBounds();
+    return collision_box->getGlobalBounds();
 }
 
-int Enemy::getHp()
-{
-    return hp;
-}
 int Enemy::getType()
 {
     return type;
+}
+RectangleShape Enemy::getColBox()
+{
+    return *collision_box;
 }
 
 

@@ -56,12 +56,12 @@ class Game
         Text *scoreT;
         Clock bullet_clock, enemy_clock, game_clock, select_clock, dmg_clock, text_clock;
         Time bullet_cooldown, enemy_cd, game_timer, select_timer;
-        bool dir = false, state, dead, god;
+        bool dir = false, state, dead, god, alive, info;
         Player* player;
         Hud* hud;
         float mili;
         Enemy *elegido;
-        Sprite *lifes[2];
+        vector<Sprite*> lifes;
 
 
 };

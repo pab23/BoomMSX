@@ -10,25 +10,25 @@ using namespace sf;
 class Enemy
 {
     public:
-        Enemy(){hp = 1; type = 0;};
-        Enemy(Sprite, int, int);
+        Enemy(){ type = 0;};
+        Enemy(Sprite, int);
         virtual ~Enemy();
 
         void hit();
         void move(Vector2f, float);
-        int gestionaVida(int);
+
 
         Sprite getSprite();
         Vector2f getPosition();
         FloatRect getBounds();
-        int getHp();
         int getType();
+        RectangleShape getColBox();
 
     protected:
     private:
         Sprite *sprite;
-        unsigned int hp;
         unsigned int type;
+        RectangleShape *collision_box;
 
 };
 

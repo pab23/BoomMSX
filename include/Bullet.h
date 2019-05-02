@@ -21,12 +21,14 @@ class Bullet
         Sprite getSprite();
         Vector2f getPos();
         int getDmg();
+        CircleShape getColBox();
 
     protected:
 
     private:
         Sprite* sprite;
         int dmg;
+        CircleShape *collision_box;
 };
 
 #endif // BULLET_H
