@@ -5,7 +5,7 @@
 #include "Animation.h"
 
 
-#define SPEED 0.5
+#define SPEED 500
 
 using namespace sf;
 
@@ -13,11 +13,12 @@ class Enemy
 {
     public:
         Enemy(){ type = 0;};
-        Enemy(Texture&, int);
+        Enemy(Texture&, int, Vector2i);
         virtual ~Enemy();
 
         void hit();
         void move(Vector2f, float);
+        void updateAnim();
 
 
         Sprite getSprite();

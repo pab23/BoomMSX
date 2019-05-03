@@ -111,6 +111,14 @@ void Game::dibujar()
             if(info)
                 window->draw(enemies[i]->getColBox());
         }
+        if(animation_clock.getElapsedTime().asSeconds() > 0.2f)
+            {
+                for(unsigned i = 0; i < enemies.size(); i++)
+                    enemies[i]->updateAnim();
+
+                animation_clock.restart();
+
+            }
         for( unsigned j = 0; j < bullets.size(); j++)
         {
             window->draw(bullets[j]->getSprite());
@@ -313,8 +321,7 @@ void Game::creaEnemigos()
     int posX  = 100, posY = 100, type = 2;
     for( unsigned i = 0; i < 27; i++)
     {
-        enemies.push_back(new Enemy(*sheet, type));
-        enemies[i]->setPosition(posX, posY);
+        enemies.push_back(new Enemy(*sheet, type, {posX, posY}));
         posX += 75;
         if(posX > winDim.x-100)
         {

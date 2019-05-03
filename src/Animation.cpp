@@ -7,13 +7,13 @@ Animation::Animation(int type, Texture& tex)
     switch(type)
     {
     case 0:
-        aux = 35+32*2;
+        aux = 34+32*2;
         break;
     case 1:
-        aux = 35*32;
+        aux = 34+32;
         break;
     case 2:
-        aux = 35;
+        aux = 34;
         break;
     default:
         aux = 0;
@@ -44,7 +44,7 @@ void Animation::move(Vector2f dir, float time, int speed)
 {
     for(unsigned i = 0; i < sprite_array.size(); i++)
     {
-        sprite_array[i]->move(dir.x * speed * time * 1000, dir.y * speed * time * 1000);
+        sprite_array[i]->move(dir.x * speed * time , dir.y * speed * time );
     }
 }
 

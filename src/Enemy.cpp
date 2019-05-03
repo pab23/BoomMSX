@@ -2,13 +2,14 @@
 
 
 
-Enemy::Enemy( Texture& tex, int fType)
+Enemy::Enemy( Texture& tex, int fType, Vector2i pos)
 {
     if(fType >= 0 && fType < 3)
         type = fType;
     else
         type = 0;
     sprite = new Animation(type, tex);
+    sprite->setPosition(pos.x, pos.y);
     collision_box = new RectangleShape({26,26});
     collision_box->setOrigin(collision_box->getSize().x/2, collision_box->getSize().y/2);
     collision_box->setPosition(getPosition());
@@ -25,14 +26,19 @@ Enemy::~Enemy()
 
 void Enemy::move(Vector2f dir, float time)
 {
+
     sprite->move(dir, time, SPEED);
-    collision_box->move(dir.x * SPEED * time * 1000, dir.y * SPEED * time * 1000);
+    collision_box->move(dir.x * SPEED * time , dir.y * SPEED * time );
 
 }
 
+void Enemy::updateAnim()
+{
+    sprite->update();
+}
 
 
-sf::Sprite Enemy::getSprite(){
+Sprite Enemy::getSprite(){
     return sprite->getCurrent();
 }
 
