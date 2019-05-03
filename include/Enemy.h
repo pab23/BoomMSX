@@ -1,7 +1,9 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
+#include "Animation.h"
+
 
 #define SPEED 0.5
 
@@ -11,7 +13,7 @@ class Enemy
 {
     public:
         Enemy(){ type = 0;};
-        Enemy(Sprite, int);
+        Enemy(Texture&, int);
         virtual ~Enemy();
 
         void hit();
@@ -23,10 +25,11 @@ class Enemy
         FloatRect getBounds();
         int getType();
         RectangleShape getColBox();
+        void setPosition(int, int);
 
     protected:
     private:
-        Sprite *sprite;
+        Animation *sprite;
         unsigned int type;
         RectangleShape *collision_box;
 

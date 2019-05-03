@@ -307,25 +307,14 @@ void Game::mueveBalas()
 
 void Game::creaEnemigos()
 {
-    Sprite ex(*sheet);
-    vector<IntRect> guides;
-    guides.push_back(IntRect(35, 0, 32, 32));
-    guides.push_back(IntRect(35+32, 0, 32, 32));
-    guides.push_back(IntRect(2*32+35, 0, 32, 32));
-
     int cont = 0;
 
-
-    ex.rotate(-90);
-    ex.setScale(1.25, 1.5);
-    ex.setOrigin(16, 16);
 
     int posX  = 100, posY = 100, type = 2;
     for( unsigned i = 0; i < 27; i++)
     {
-        ex.setPosition(posX , posY);
-        ex.setTextureRect(guides[cont]);
-        enemies.push_back(new Enemy(ex, type));
+        enemies.push_back(new Enemy(*sheet, type));
+        enemies[i]->setPosition(posX, posY);
         posX += 75;
         if(posX > winDim.x-100)
         {

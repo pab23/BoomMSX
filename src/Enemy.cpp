@@ -2,17 +2,18 @@
 
 
 
-Enemy::Enemy( sf::Sprite fSprite, int fType)
+Enemy::Enemy( Texture& tex, int fType)
 {
     if(fType >= 0 && fType < 3)
         type = fType;
     else
         type = 0;
-    sprite = new Sprite(fSprite);
-    collision_box = new RectangleShape({28,28});
-    collision_box->setOrigin(14, 14);
+    sprite = new Animation(type, tex);
+    collision_box = new RectangleShape({26,26});
+    collision_box->setOrigin(collision_box->getSize().x/2, collision_box->getSize().y/2);
     collision_box->setPosition(getPosition());
     collision_box->setFillColor({255,0,0});
+    collision_box->setRotation(45);
 }
 
 Enemy::~Enemy()
@@ -24,7 +25,7 @@ Enemy::~Enemy()
 
 void Enemy::move(Vector2f dir, float time)
 {
-    sprite->move(dir.x * SPEED * time * 1000, dir.y * SPEED * time * 1000);
+    sprite->move(dir, time, SPEED);
     collision_box->move(dir.x * SPEED * time * 1000, dir.y * SPEED * time * 1000);
 
 }
@@ -32,7 +33,7 @@ void Enemy::move(Vector2f dir, float time)
 
 
 sf::Sprite Enemy::getSprite(){
-    return *sprite;
+    return sprite->getCurrent();
 }
 
 Vector2f Enemy::getPosition()
@@ -52,5 +53,8 @@ RectangleShape Enemy::getColBox()
 {
     return *collision_box;
 }
-
+void Enemy::setPosition(int x, int y)
+{
+    sprite->setPosition(x, y);
+}
 

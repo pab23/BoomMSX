@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#define BULLET_SPEED 6
+#define BULLET_SPEED 12000
 
 using namespace sf;
 using namespace std;

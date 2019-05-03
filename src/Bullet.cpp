@@ -29,13 +29,13 @@ void Bullet::move(bool dir, float time)
 {
     if(dir)
     {
-        sprite->move(0, BULLET_SPEED * time * 1000);
-        collision_box->move(0, BULLET_SPEED * time * 1000);
+        sprite->move(0, BULLET_SPEED * time);
+        collision_box->move(0, BULLET_SPEED * time );
     }
     else
     {
-        sprite->move(0, -(BULLET_SPEED * time * 1000));
-        collision_box->move(0, -(BULLET_SPEED * time * 1000));
+        sprite->move(0, -(BULLET_SPEED * time ));
+        collision_box->move(0, -(BULLET_SPEED * time ));
 
     }
 
